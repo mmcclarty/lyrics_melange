@@ -4,13 +4,14 @@ Python 3
 
 
 import requests
+import codecs 
 from bs4 import BeautifulSoup
 
 base_url = 'http://api.genius.com'
 headers = {'Authorization': 'Bearer 5gjDjwFArLPqHFYwuUeCqLbDwbM6Jp972-z8_u-rpYdAyQGuqX-D7Uajxx0l2W6U'}
 
-song_title = input('Find song:')
-artist_name = input('By artist:')
+song_title = raw_input('Find song:')
+artist_name = raw_input('By artist:')
 
 def lyrics_from_song_api_path(song_api_path):
     song_url = base_url + song_api_path
@@ -41,7 +42,8 @@ if __name__ == '__main__':
         print(lyrics_from_song_api_path(song_api_path))
         full_lyrics = lyrics_from_song_api_path(song_api_path)
         f = open('text.txt', 'a')
-        f.write(full_lyrics)
+       	full_lyrics = full_lyrics.encode('utf-8')
+	f.write(full_lyrics)
 
     else:
         print(artist_name + ' - ' + song_title + ': Not found')
