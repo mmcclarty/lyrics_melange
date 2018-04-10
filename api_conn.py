@@ -1,18 +1,18 @@
-'''
-Python 3
-'''
-
-
 import requests
 import codecs 
 from bs4 import BeautifulSoup
 
 base_url = 'http://api.genius.com'
-headers = {'Authorization': 'Bearer LR01MZdwZyZR5i5RLc-VNOdZYDqF3Zi8Z0UdFVXgZ5Y4bH7vYnDLoiF5n3N4Bwi-'}
+# Go get your own token from the Genius API website ;)
+token = ''
+headers = {'Authorization': 'Bearer {}'.format(token)}
 
-song_title = raw_input('Find song:')
-artist_name = raw_input('By artist:')
+song_choices_en = {'Kanye West' : 'Jesus Walks', 'Eminem' : 'Lose Yourself', 'Snoop Dogg' : 'The Next Episode'}
+song_choices_fr = {'Lomepal': 'Yeux Disent', 'Chilla' : 'Sale Chienne', 'Nekfeu' : 'On verra', 'IAM' : 'Demain C\'est Loin'}
+#song_title = raw_input('Find song:')
+#artist_name = raw_input('By artist:')
 
+# Parse lyrics from Rap Genius API
 def lyrics_from_song_api_path(song_api_path):
     song_url = base_url + song_api_path
     response = requests.get(song_url, headers=headers)
@@ -26,24 +26,31 @@ def lyrics_from_song_api_path(song_api_path):
     lyrics = html.find(class_='lyrics').get_text()
     return lyrics
 
-if __name__ == '__main__':
+# Search for artist/song title combinations and pass to retrieve lyrics
+def get_lyrics(song_choices, name):
     search_url = base_url + '/search'
-    data = {'q': song_title}
-    response = requests.get(search_url, params=data, headers=headers)
-    song_info = None
-    json = response.json()
 
-    for hit in json['response']['hits']:
-        if hit['result']['primary_artist']['name'] == artist_name:
-            song_info = hit
-    if song_info:
-        song_api_path = song_info['result']['api_path']
-        print(song_info['result']['full_title'])
-        print(lyrics_from_song_api_path(song_api_path))
-        full_lyrics = lyrics_from_song_api_path(song_api_path)
-        f = open('text.txt', 'a')
-       	full_lyrics = full_lyrics.encode('utf-8')
-	f.write(full_lyrics)
+    for artist_name, song_title in song_choices.items():
+        data = {'q': song_title}
+        response = requests.get(search_url, params=data, headers=headers)
+        song_info = None
+        json = response.json()
 
-    else:
-        print(artist_name + ' - ' + song_title + ': Not found')
+        # Find matches for song title that match artist name also
+        for hit in json['response']['hits']:
+            if hit['result']['primary_artist']['name'] == artist_name:
+                song_info = hit
+        if song_info:
+            song_api_path = song_info['result']['api_path']
+            print(song_info['result']['full_title'])
+            print(lyrics_from_song_api_path(song_api_path))
+            full_lyrics = lyrics_from_song_api_path(song_api_path)
+            # Write lyrics to generated text file
+            f = open('%s.txt' % name, 'a')
+            full_lyrics = full_lyrics.encode('utf-8')
+            f.write(full_lyrics)
+        else:
+            print(artist_name + ' - ' + song_title + ': Not found')
+
+get_lyrics(song_choices_en, 'EN')
+get_lyrics(song_choices_fr, 'FR')
