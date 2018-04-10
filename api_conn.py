@@ -8,7 +8,7 @@ import codecs
 from bs4 import BeautifulSoup
 
 base_url = 'http://api.genius.com'
-headers = {'Authorization': 'Bearer 5gjDjwFArLPqHFYwuUeCqLbDwbM6Jp972-z8_u-rpYdAyQGuqX-D7Uajxx0l2W6U'}
+headers = {'Authorization': 'Bearer LR01MZdwZyZR5i5RLc-VNOdZYDqF3Zi8Z0UdFVXgZ5Y4bH7vYnDLoiF5n3N4Bwi-'}
 
 song_title = raw_input('Find song:')
 artist_name = raw_input('By artist:')
