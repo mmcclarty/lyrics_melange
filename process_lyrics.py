@@ -43,9 +43,7 @@ def filter_lyrics(rap_lyrics, stop_words):
     for w in rap_lyrics:
         if w.lower() not in stop_words:
             filtered_lyrics.append(w.lower())
-
-    #table = string.maketrans("", string.punctuation)
-    #no_punc = [s.translate(table) for s in filtered_lyrics]
+            
     remove_punctuation_map = dict((ord(char), None) for char in string.punctuation)
     no_punc = [s.translate(remove_punctuation_map) for s in filtered_lyrics]
 
@@ -64,31 +62,15 @@ def filter_swears(filtered, swear_list):
 
 
 def sentiment_analysis(rap_lyrics):
-
-    # sentiment_instance = SentimentAnalyzer()
-    # all_words_neg = sentiment_instance.all_words([mark_negation(doc) for doc in train_lyrics])
-    # unigram_feats = sentiment_instance.unigram_word_feats(all_words_neg, min_freq=4)
-    # print(len(unigram_feats))
-    # sentiment_instance.add_feat_extractor(extract_unigram_feats, unigrams=unigram_feats)
-    #
-    # training_set = sentiment_instance.apply_features(train_lyrics)
-    # test_set = sentiment_instance.apply_features(test_lyrics)
-    #
-    # trainer = NaiveBayesClassifier.train
-    # classifier = sentiment_instance.train(trainer, training_set)
-    # for key, value in sorted(sentiment_instance.evaluate(test_set).items()):
-    #     print('{0}: {1}'.format(key, value))
-
+    # Create dataframe of open source English word sentiments
     lexicon = pd.read_csv('subjclueslen1-HLTEMNLP05.txt', sep=' ', header=None, error_bad_lines=False)
-
     lexdf = pd.DataFrame(lexicon)
 
+    # Title columns for easier analysis
     list = [0, 1, 2, 3, 4, 5]
     titles = ['Type', 'Length', 'Word', 'Pos', 'Stemmed', 'Priorpolarity']
-
     for i, j in zip(list, titles):
         lexdf[j] = lexdf[i].apply(lambda s: s.split('=')[1])
-
     lexdf = lexdf.drop([0, 1, 2, 3, 4, 5], axis=1)
     print(lexdf.head())
 
