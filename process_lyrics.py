@@ -27,7 +27,7 @@ are taken from https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Othe
 
 # Split compiled lyrics files into discreet words (tokenize)
 def read_words(words_file):
-    into_words = [word for line in io.open(words_file, 'r', encoding='utf-8') for word in line.split()]
+    into_words = [word for line in io.open(words_file, 'r') for word in line.split()]
     return into_words
 
 
